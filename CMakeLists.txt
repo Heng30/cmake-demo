@@ -58,6 +58,30 @@ endif(MIN_FOUND)
 
 #############################################
 
+# 需要先下载spdlog库，手动编译后，配合cmake/spdlog.cmake 文件才能完成编译
+# add_definitions(-std=c++11)  # 指定采用c++11进行编译（spdlog需要c++11）
+# add_executable(test_spdlog spdlogtest.cpp)
+
+# set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake;${CMAKE_MODULE_PATH}")
+# include(spdlog)
+
+# target_link_libraries(test_spdlog ${SPDLOG_LIB})
+# target_include_directories(test_spdlog PRIVATE ${SPDLOG_INCLUDE_DIR})
+
+#############################################
+
+# 通过cmake/spdlog2.cmake的配置，直接从github上下载spdlog库，然后进行编译
+
+# add_definitions(-std=c++11)  # 指定采用c++11进行编译（spdlog需要c++11）
+add_executable(test_spdlog spdlogtest.cpp)
+
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake;${CMAKE_MODULE_PATH}")
+include(spdlog2)
+
+target_link_libraries(test_spdlog PRIVATE spdlog)
+
+#############################################
+
 # 设置变量
 set(TEST "Local Var" ON)
 #set(TEST "Parent scope Var" ON PARENT_SCOPE)
