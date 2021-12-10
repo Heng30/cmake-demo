@@ -1,8 +1,8 @@
 # 设置cmake最低版本
 cmake_minimum_required(VERSION 3.20 FATAL_ERROR)
 
-# 设置项目名
-project(helloworld LANGUAGES CXX)
+# 设置项目信息
+project(helloworld LANGUAGES CXX VERSION 1.0.0)
 
 # 设置C++的版本
 set(CMAKE_CXX_STANDARD 17)
@@ -17,6 +17,8 @@ add_executable(main main.cpp)
 # 添加头文件搜索目录
 # include_directories(./max_lib ./add_lib)
 target_include_directories(main PRIVATE ${CMAKE_SOURCE_DIR}/max_lib ${CMAKE_SOURCE_DIR}/add_lib)
+
+set_target_properties(main PROPERTIES PUBLIC_HEADER ${CMAKE_SOURCE_DIR}/main.h)
 
 # 添加动态库
 add_library(max SHARED ${CMAKE_SOURCE_DIR}/max_lib/max.cpp)
@@ -60,25 +62,46 @@ endif(MIN_FOUND)
 
 # 需要先下载spdlog库，手动编译后，配合cmake/spdlog.cmake 文件才能完成编译
 # add_definitions(-std=c++11)  # 指定采用c++11进行编译（spdlog需要c++11）
-# add_executable(test_spdlog spdlogtest.cpp)
+# add_executable(spdlogtest spdlogtest.cpp)
 
 # set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake;${CMAKE_MODULE_PATH}")
 # include(spdlog)
 
-# target_link_libraries(test_spdlog ${SPDLOG_LIB})
-# target_include_directories(test_spdlog PRIVATE ${SPDLOG_INCLUDE_DIR})
+# target_link_libraries(spdlogtest ${SPDLOG_LIB})
+# target_include_directories(spdlogtest PRIVATE ${SPDLOG_INCLUDE_DIR})
 
 #############################################
 
 # 通过cmake/spdlog2.cmake的配置，直接从github上下载spdlog库，然后进行编译
 
 # add_definitions(-std=c++11)  # 指定采用c++11进行编译（spdlog需要c++11）
-add_executable(test_spdlog spdlogtest.cpp)
+add_executable(spdlogtest spdlogtest.cpp)
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake;${CMAKE_MODULE_PATH}")
 include(spdlog2)
 
-target_link_libraries(test_spdlog PRIVATE spdlog)
+target_link_libraries(spdlogtest PRIVATE spdlog)
+
+#############################################
+
+# 将库文件，可执行文件，头文件安装到指定目录
+install(TARGETS main spdlogtest mintest curltest max add
+        EXPORT MyTargets
+        LIBRARY DESTINATION ${CMAKE_SOURCE_DIR}/build/lib
+        ARCHIVE DESTINATION ${CMAKE_SOURCE_DIR}/build/lib
+        RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/build/bin
+        PUBLIC_HEADER DESTINATION ${CMAKE_SOURCE_DIR}/build/include
+        )
+
+#############################################
+
+# 使用vcpkg安装opencv库，通过cmake进行编译
+set(CMAKE_TOOLCHAIN_FILE, $ENV{VCPKG_HOME}/scripts/buildsystems/vcpkg.cmake)
+find_package( OpenCV REQUIRED )
+include_directories( ${OpenCV_INCLUDE_DIRS} )
+add_executable( opencvtest opencvtest.cpp )
+target_link_libraries( opencvtest ${OpenCV_LIBS} )
+unset(CMAKE_TOOLCHAIN_FILE)
 
 #############################################
 
