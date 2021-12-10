@@ -96,12 +96,12 @@ install(TARGETS main spdlogtest mintest curltest max add
 #############################################
 
 # 使用vcpkg安装opencv库，通过cmake进行编译
-set(CMAKE_TOOLCHAIN_FILE, $ENV{VCPKG_HOME}/scripts/buildsystems/vcpkg.cmake)
-find_package( OpenCV REQUIRED )
-include_directories( ${OpenCV_INCLUDE_DIRS} )
-add_executable( opencvtest opencvtest.cpp )
-target_link_libraries( opencvtest ${OpenCV_LIBS} )
-unset(CMAKE_TOOLCHAIN_FILE)
+# set(CMAKE_TOOLCHAIN_FILE, $ENV{VCPKG_HOME}/scripts/buildsystems/vcpkg.cmake)
+# find_package( OpenCV REQUIRED )
+# include_directories( ${OpenCV_INCLUDE_DIRS} )
+# add_executable( opencvtest opencvtest.cpp )
+# target_link_libraries( opencvtest ${OpenCV_LIBS} )
+# unset(CMAKE_TOOLCHAIN_FILE)
 
 #############################################
 
